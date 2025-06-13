@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计时器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #74ebd5, #9face6);
+        }
+        
+        .timer-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            width: 350px;
+        }
+        
+        .timer-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .timer-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        
+        .start-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .pause-btn {
+            background-color: #FF9800;
+            color: white;
+        }
+        
+        .reset-btn {
+            background-color: #F44336;
+            color: white;
+        }
+        
+        .timer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .title {
+            color: #333;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="timer-container">
+        <h1 class="title">计时器</h1>
+        <div class="timer-display" id="display">00:00:00</div>
+        <div class="timer-controls">
+            <button class="timer-btn start-btn" id="startBtn">开始</button>
+            <button class="timer-btn pause-btn" id="pauseBtn" disabled>暂停</button>
+            <button class="timer-btn reset-btn" id="resetBtn">重置</button>
+        </div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const display = document.getElementById('display');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        // 计时器变量
+        let startTime;
+        let elapsedTime = 0;
+        let timerInterval;
+        let isRunning = false;
+        
+        // 格式化时间显示
+        function formatTime(timeInSeconds) {
+            const hours = Math.floor(timeInSeconds / 3600);
+            const minutes = Math.floor((timeInSeconds % 3600) / 60);
+            const seconds = timeInSeconds % 60;
+            
+            return [
+                hours.toString().padStart(2, '0'),
+                minutes.toString().padStart(2, '0'),
+                seconds.toString().padStart(2, '0')
+            ].join(':');
+        }
+        
+        // 更新显示
+        function updateDisplay() {
+            const currentTime = Math.floor((Date.now() - startTime) / 1000) + elapsedTime;
+            display.textContent = formatTime(currentTime);
+        }
+        
+        // 开始计时
+        function startTimer() {
+            if (!isRunning) {
+                startTime = Date.now();
+                timerInterval = setInterval(updateDisplay, 1000);
+                isRunning = true;
+                
+                // 更新按钮状态
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+            }
+        }
+        
+        // 暂停计时
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                elapsedTime += Math.floor((Date.now() - startTime) / 1000);
+                isRunning = false;
+                
+                // 更新按钮状态
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+            }
+        }
+        
+        // 重置计时器
+        function resetTimer() {
+            clearInterval(timerInterval);
+            display.textContent = '00:00:00';
+            elapsedTime = 0;
+            isRunning = false;
+            
+            // 更新按钮状态
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+        
+        // 添加事件监听器
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
+    </script>
+</body>
+</html>
