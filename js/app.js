@@ -1,5 +1,3 @@
-
-
 // 全局变量
 let uploadedImage = null;
 let isProcessing = false;
@@ -11,17 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    // 初始化OpenAI客户端
+    // 初始化Gemini客户端
     tarotAI = new TarotAIClient();
 
     // 绑定DOM元素事件
     document.getElementById('tarotImage').addEventListener('change', handleImageUpload);
     document.getElementById('readButton').addEventListener('click', startReading);
-    document.getElementById('settingsBtn').addEventListener('click', () => {
-        document.getElementById('apiModal').style.display = 'flex';
-    });
+    document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
     document.getElementById('saveApiConfigBtn').addEventListener('click', saveApiConfig);
     document.getElementById('userQuestion').addEventListener('input', updateReadButtonState);
+    document.querySelector('.remove-btn').addEventListener('click', removeImage);
 
     // 检查API配置
     checkAPIConfiguration();
@@ -30,39 +27,35 @@ function initializeApp() {
     setupDragAndDrop();
 }
 
+// 打开设置模态框并填充已有数据
+function openSettingsModal() {
+    document.getElementById('apiKey').value = localStorage.getItem('gemini_api_key') || '';
+    document.getElementById('apiModal').style.display = 'flex';
+}
+
 // 检查API配置
 function checkAPIConfiguration() {
-    const apiKey = localStorage.getItem('openai_api_key');
-    const apiBaseUrl = localStorage.getItem('openai_base_url');
-
-    if (apiKey && apiBaseUrl) {
+    const apiKey = localStorage.getItem('gemini_api_key');
+    if (apiKey) {
         tarotAI.apiKey = apiKey;
-        tarotAI.baseURL = apiBaseUrl;
         document.getElementById('apiModal').style.display = 'none';
     } else {
-        document.getElementById('apiModal').style.display = 'flex';
+        openSettingsModal(); // 如果没有key，直接打开设置窗口
     }
 }
 
 // 保存API配置
 function saveApiConfig() {
     const apiKey = document.getElementById('apiKey').value.trim();
-    const apiBaseUrl = document.getElementById('apiBaseUrl').value.trim();
-
-    if (apiKey && apiBaseUrl) {
-        localStorage.setItem('openai_api_key', apiKey);
-        localStorage.setItem('openai_base_url', apiBaseUrl);
-        
+    if (apiKey) {
+        localStorage.setItem('gemini_api_key', apiKey);
         tarotAI.apiKey = apiKey;
-        tarotAI.baseURL = apiBaseUrl;
-        
         document.getElementById('apiModal').style.display = 'none';
-        alert('配置已保存！');
+        alert('API密钥已保存！');
     } else {
-        alert('请确保API地址和密钥都已填写。');
+        alert('请输入您的Gemini API密钥。');
     }
 }
-
 
 // 处理图片上传
 function handleImageUpload(event) {
@@ -142,8 +135,8 @@ async function startReading() {
     if (isProcessing) return;
 
     if (!tarotAI.isConfigured()) {
-        alert('请先点击右下角设置按钮 ⚙️ 配置API信息。');
-        document.getElementById('apiModal').style.display = 'flex';
+        alert('请先点击右下角设置按钮 ⚙️ 配置您的Gemini API密钥。');
+        openSettingsModal();
         return;
     }
     
@@ -162,7 +155,7 @@ async function startReading() {
         
     } catch (error) {
         console.error('解读失败:', error);
-        showError(error.message || '抱歉，解读过程中出现了错误。请稍后再试。');
+        showError(error.message || '抱歉，解读过程中出现了错误。请检查网络或API密钥后重试。');
     } finally {
         isProcessing = false;
         updateUIForProcessing(false);
@@ -175,10 +168,10 @@ function updateUIForProcessing(processing) {
     const btnText = readButton.querySelector('.btn-text');
     const loading = readButton.querySelector('.loading');
     
+    readButton.disabled = processing;
     if (processing) {
         btnText.style.display = 'none';
         loading.style.display = 'inline-block';
-        readButton.disabled = true;
     } else {
         btnText.style.display = 'inline-block';
         loading.style.display = 'none';
@@ -208,6 +201,11 @@ function showLoadingState() {
 function displayResult(reading) {
     const resultContent = document.getElementById('resultContent');
     
+    // 使用 pre-wrap 来保留换行和空格
+    const formatText = (text) => {
+        return text.replace(/\n/g, '<br>');
+    }
+
     resultContent.innerHTML = `
         <div class="reading-result">
             <div class="cards-identified">
@@ -224,13 +222,13 @@ function displayResult(reading) {
             
             <div class="interpretation">
                 <h4>解读分析</h4>
-                <div class="interpretation-text">${reading.interpretation.replace(/\n/g, '<br>')}</div>
+                <div class="interpretation-text">${formatText(reading.interpretation)}</div>
             </div>
             
             ${reading.advice ? `
                 <div class="advice">
                     <h4>建议与指引</h4>
-                    <div class="advice-text">${reading.advice.replace(/\n/g, '<br>')}</div>
+                    <div class="advice-text">${formatText(reading.advice)}</div>
                 </div>
             ` : ''}
         </div>
@@ -266,7 +264,7 @@ function saveReading() {
     a.href = url;
     a.download = `塔罗解读_${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
-a.click();
+    a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     

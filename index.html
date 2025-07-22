@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
     <title>神秘塔罗牌解读 - AI智能分析</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family+Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
@@ -18,15 +19,11 @@
         <!-- API配置模态框 -->
         <div class="api-modal" id="apiModal">
             <div class="modal-content">
-                <h3>🔑 AI 服务配置</h3>
-                <p>请输入您的API信息，我们将安全地保存在您的浏览器中。</p>
-                <div class="input-group">
-                    <label for="apiBaseUrl">API 地址:</label>
-                    <input type="text" id="apiBaseUrl" placeholder="例如: https://api.openai.com/v1">
-                </div>
+                <h3>🔑 Gemini API 配置</h3>
+                <p>请输入您的Gemini API密钥，我们将安全地保存在您的浏览器中。</p>
                 <div class="input-group">
                     <label for="apiKey">API 密钥:</label>
-                    <input type="password" id="apiKey" placeholder="sk-...">
+                    <input type="password" id="apiKey" placeholder="请输入您的Gemini API密钥">
                 </div>
                 <div class="modal-buttons">
                     <button class="save-config-btn" id="saveApiConfigBtn">保存配置</button>
@@ -105,7 +102,7 @@
         </footer>
     </div>
 
-    <script src="js/openai-client.js"></script>
+    <script src="js/gemini-client.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
