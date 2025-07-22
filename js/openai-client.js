@@ -95,7 +95,7 @@ class OpenAIClient {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'gpt-4o-mini',
+                model: 'gemini-2.5-flash',
                 messages: [
                     {
                         role: 'system',
