@@ -19,11 +19,18 @@
         <!-- API配置模态框 -->
         <div class="api-modal" id="apiModal">
             <div class="modal-content">
-                <h3>🔑 Gemini API 配置</h3>
-                <p>请输入您的Gemini API密钥，我们将安全地保存在您的浏览器中。</p>
+                <h3>🔑 AI API 配置</h3>
+                <p>请选择您偏好的AI服务商并输入对应的API密钥，我们将安全地保存在您的浏览器中。</p>
+                <div class="input-group">
+                    <label for="apiType">AI 服务商:</label>
+                    <select id="apiType">
+                        <option value="openai">OpenAI (推荐)</option>
+                        <option value="gemini">Google Gemini (备用)</option>
+                    </select>
+                </div>
                 <div class="input-group">
                     <label for="apiKey">API 密钥:</label>
-                    <input type="password" id="apiKey" placeholder="请输入您的Gemini API密钥">
+                    <input type="password" id="apiKey" placeholder="请输入您的API密钥">
                 </div>
                 <div class="modal-buttons">
                     <button class="save-config-btn" id="saveApiConfigBtn">保存配置</button>
@@ -102,7 +109,7 @@
         </footer>
     </div>
 
-    <script src="js/gemini-client.js"></script>
+    <script src="js/openai-client.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

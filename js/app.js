@@ -29,15 +29,38 @@ function initializeApp() {
 
 // 打开设置模态框并填充已有数据
 function openSettingsModal() {
-    document.getElementById('apiKey').value = localStorage.getItem('gemini_api_key') || '';
+    // 尝试获取最新的API密钥
+    const openaiKey = localStorage.getItem('openai_api_key') || '';
+    const geminiKey = localStorage.getItem('gemini_api_key') || '';
+    
+    // 显示当前配置的API类型
+    const apiType = document.getElementById('apiKey').placeholder;
+    
+    if (openaiKey || !geminiKey) {
+        // 优先考虑OpenAI
+        document.getElementById('apiKey').value = openaiKey;
+        document.getElementById('apiType').value = 'openai';
+    } else {
+        // 使用Gemini作为后备
+        document.getElementById('apiKey').value = geminiKey;
+        document.getElementById('apiType').value = 'gemini';
+    }
+    
     document.getElementById('apiModal').style.display = 'flex';
 }
 
 // 检查API配置
 function checkAPIConfiguration() {
-    const apiKey = localStorage.getItem('gemini_api_key');
-    if (apiKey) {
-        tarotAI.apiKey = apiKey;
+    const openaiKey = localStorage.getItem('openai_api_key');
+    const geminiKey = localStorage.getItem('gemini_api_key');
+    
+    if (openaiKey) {
+        // 使用新的OpenAI客户端
+        tarotAI.saveApiKey(openaiKey);
+        document.getElementById('apiModal').style.display = 'none';
+    } else if (geminiKey) {
+        // 使用旧的Gemini配置
+        tarotAI.saveApiKey(geminiKey);
         document.getElementById('apiModal').style.display = 'none';
     } else {
         openSettingsModal(); // 如果没有key，直接打开设置窗口
@@ -47,13 +70,21 @@ function checkAPIConfiguration() {
 // 保存API配置
 function saveApiConfig() {
     const apiKey = document.getElementById('apiKey').value.trim();
+    const apiType = document.getElementById('apiType')?.value || 'openai';
+    
     if (apiKey) {
-        localStorage.setItem('gemini_api_key', apiKey);
-        tarotAI.apiKey = apiKey;
+        if (apiType === 'openai') {
+            localStorage.setItem('openai_api_key', apiKey);
+            tarotAI.saveApiKey(apiKey);
+        } else {
+            localStorage.setItem('gemini_api_key', apiKey);
+            alert('现在支持OpenAI API，建议您迁移到OpenAI以获得更好的体验！');
+        }
+        
         document.getElementById('apiModal').style.display = 'none';
         alert('API密钥已保存！');
     } else {
-        alert('请输入您的Gemini API密钥。');
+        alert('请输入您的API密钥。');
     }
 }
 
@@ -208,29 +239,9 @@ function displayResult(reading) {
 
     resultContent.innerHTML = `
         <div class="reading-result">
-            <div class="cards-identified">
-                <h4>识别到的塔罗牌</h4>
-                <div class="cards-list">
-                    ${reading.cards.map(card => `
-                        <div class="card-item">
-                            <strong>${card.name}</strong>
-                            ${card.reversed ? ' (逆位)' : ' (正位)'}
-                        </div>
-                    `).join('')}
-                </div>
+            <div class="unified-reading">
+                <div class="reading-text">${formatText(reading.unifiedReading || reading)}</div>
             </div>
-            
-            <div class="interpretation">
-                <h4>解读分析</h4>
-                <div class="interpretation-text">${formatText(reading.interpretation)}</div>
-            </div>
-            
-            ${reading.advice ? `
-                <div class="advice">
-                    <h4>建议与指引</h4>
-                    <div class="advice-text">${formatText(reading.advice)}</div>
-                </div>
-            ` : ''}
         </div>
     `;
 }
