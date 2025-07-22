@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神秘塔罗牌解读 - AI智能分析</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family+Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="container">
+        <header>
+            <h1>🔮 神秘塔罗牌解读 🔮</h1>
+            <p class="subtitle">上传您抽到的塔罗牌照片，AI将为您揭示命运的奥秘</p>
+        </header>
+
+        <!-- API配置模态框 -->
+        <div class="api-modal" id="apiModal" style="display: none;">
+            <div class="modal-content">
+                <h3>🔑 AI配置设置</h3>
+                <p>首次使用需要配置AI服务信息</p>
+                <div class="input-group">
+                    <label>API基础地址:</label>
+                    <input type="text" id="apiBaseUrl" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+                </div>
+                <div class="input-group">
+                    <label>API密钥:</label>
+                    <input type="password" id="apiKey" placeholder="sk-...">
+                </div>
+                <div class="modal-buttons">
+                    <button class="save-config-btn" onclick="saveApiConfig()">保存配置</button>
+                    <button class="demo-btn" onclick="useDemoMode()">使用演示模式</button>
+                </div>
+            </div>
+        </div>
+
+        <main>
+            <!-- 上传区域 -->
+            <section class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📸</div>
+                    <h3>上传塔罗牌照片</h3>
+                    <p>支持 JPG、PNG 格式，最大 10MB</p>
+                    <input type="file" id="tarotImage" accept="image/*" hidden>
+                    <button class="upload-btn" onclick="document.getElementById('tarotImage').click()">
+                        选择图片
+                    </button>
+                </div>
+                <div class="preview-area" id="previewArea" style="display: none;">
+                    <img id="previewImage" alt="上传的塔罗牌">
+                    <button class="remove-btn" onclick="removeImage()">×</button>
+                </div>
+            </section>
+
+            <!-- 问题输入 -->
+            <section class="question-section">
+                <h3>您的问题或关注点</h3>
+                <textarea id="userQuestion" placeholder="请描述您想要咨询的问题，比如：我的事业发展如何？或者我们的感情发展..."></textarea>
+            </section>
+
+            <!-- 牌阵选择 -->
+            <section class="spread-section">
+                <h3>选择牌阵</h3>
+                <div class="spread-options">
+                    <label class="spread-option">
+                        <input type="radio" name="spread" value="single" checked>
+                        <span>单张牌</span>
+                    </label>
+                    <label class="spread-option">
+                        <input type="radio" name="spread" value="three">
+                        <span>三张牌（过去-现在-未来）</span>
+                    </label>
+                    <label class="spread-option">
+                        <input type="radio" name="spread" value="celtic">
+                        <span>凯尔特十字</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 开始解读按钮 -->
+            <section class="action-section">
+                <button class="read-btn" id="readButton" disabled>
+                    <span class="btn-text">开始解读</span>
+                    <span class="loading" style="display: none;">解读中...</span>
+                </button>
+            </section>
+
+            <!-- 结果展示 -->
+            <section class="result-section" id="resultSection" style="display: none;">
+                <h3>🔮 AI解读结果</h3>
+                <div class="result-content" id="resultContent">
+                    <!-- 解读结果将在这里显示 -->
+                </div>
+                <button class="save-btn" onclick="saveReading()">保存解读</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 神秘塔罗牌解读 | 仅供娱乐参考</p>
+        </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="api/openai-client.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
