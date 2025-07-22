@@ -15,7 +15,7 @@ class TarotAIClient {
     // 读取系统提示词
     async getSystemPrompt() {
         try {
-            const response = await fetch('./api/system-prompt.md');
+            const response = await fetch('./system-prompt.md');
             const promptText = await response.text();
             return promptText;
         } catch (error) {
