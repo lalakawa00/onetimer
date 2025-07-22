@@ -3,10 +3,9 @@ class TarotAIClient {
     constructor() {
         // 从配置文件读取设置
         this.config = window.TAROT_CONFIG || {};
-        this.apiKey = this.config.openai?.apiKey || 'sk-UfWFVbLUnLcggD0Hs3beFcmeiZsutRxvW7LzMID56Ea4UbSh';
-        this.baseURL = this.config.openai?.baseURL || 'https://api.tu-zi.com/v1';
-        this.model = this.config.openai?.model || 'gpt-4o-mini-2024-07-18';
-        this.maxTokens = this.config.openai?.maxTokens || 1500;
+        this.apiKey = this.config.openai?.apiKey || 'apikey';
+        this.baseURL = this.config.openai?.baseURL || 'apiurl';
+        this.model = this.config.openai?.model || 'gemini-2.5-pro';
         this.temperature = this.config.openai?.temperature || 0.7;
         this.requestTimeout = this.config.security?.requestTimeout || 30000;
         this.maxRetries = this.config.security?.maxRetries || 3;
