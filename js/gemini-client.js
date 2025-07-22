@@ -3,8 +3,8 @@
 class TarotAIClient {
     constructor() {
         this.apiKey = null;
-        this.baseURL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-vision:generateContent';
-        this.model = 'gemini-pro-vision';
+        this.baseURL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent';
+        this.model = 'gemini-2.5-pro';
     }
 
     // 检查API密钥是否已配置
