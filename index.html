@@ -16,23 +16,27 @@
         </header>
 
         <!-- API配置模态框 -->
-        <div class="api-modal" id="apiModal" style="display: none;">
+        <div class="api-modal" id="apiModal">
             <div class="modal-content">
-                <h3>🔑 AI配置设置</h3>
-                <p>首次使用需要配置AI服务信息</p>
+                <h3>🔑 AI 服务配置</h3>
+                <p>请输入您的API信息，我们将安全地保存在您的浏览器中。</p>
                 <div class="input-group">
-                    <label>API基础地址:</label>
-                    <input type="text" id="apiBaseUrl" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+                    <label for="apiBaseUrl">API 地址:</label>
+                    <input type="text" id="apiBaseUrl" placeholder="例如: https://api.openai.com/v1">
                 </div>
                 <div class="input-group">
-                    <label>API密钥:</label>
+                    <label for="apiKey">API 密钥:</label>
                     <input type="password" id="apiKey" placeholder="sk-...">
                 </div>
                 <div class="modal-buttons">
-                    <button class="save-config-btn" onclick="saveApiConfig()">保存配置</button>
-                    <button class="demo-btn" onclick="useDemoMode()">使用演示模式</button>
+                    <button class="save-config-btn" id="saveApiConfigBtn">保存配置</button>
                 </div>
             </div>
+        </div>
+
+        <!-- 设置按钮 -->
+        <div class="settings-fab" id="settingsBtn" title="修改API配置">
+            ⚙️
         </div>
 
         <main>
@@ -101,7 +105,6 @@
         </footer>
     </div>
 
-    <script src="config.js"></script>
     <script src="js/openai-client.js"></script>
     <script src="js/app.js"></script>
 </body>
