@@ -3,173 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>计时器</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #74ebd5, #9face6);
-        }
-        
-        .timer-container {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            text-align: center;
-            width: 350px;
-        }
-        
-        .timer-display {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #333;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .timer-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .timer-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            outline: none;
-        }
-        
-        .start-btn {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .pause-btn {
-            background-color: #FF9800;
-            color: white;
-        }
-        
-        .reset-btn {
-            background-color: #F44336;
-            color: white;
-        }
-        
-        .timer-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .timer-btn:active {
-            transform: translateY(-1px);
-        }
-        
-        .title {
-            color: #333;
-            margin-bottom: 10px;
-        }
-    </style>
+    <title>神秘塔罗牌解读 - AI智能分析</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family+Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="timer-container">
-        <h1 class="title">计时器</h1>
-        <div class="timer-display" id="display">00:00:00</div>
-        <div class="timer-controls">
-            <button class="timer-btn start-btn" id="startBtn">开始</button>
-            <button class="timer-btn pause-btn" id="pauseBtn" disabled>暂停</button>
-            <button class="timer-btn reset-btn" id="resetBtn">重置</button>
+    <div class="stars"></div>
+    <div class="container">
+        <header>
+            <h1>🔮 神秘塔罗牌解读 🔮</h1>
+            <p class="subtitle">上传您抽到的塔罗牌照片，AI将为您揭示命运的奥秘</p>
+        </header>
+
+        <!-- API配置模态框 -->
+        <div class="api-modal" id="apiModal" style="display: none;">
+            <div class="modal-content">
+                <h3>🔑 AI配置设置</h3>
+                <p>首次使用需要配置AI服务信息</p>
+                <div class="input-group">
+                    <label>API基础地址:</label>
+                    <input type="text" id="apiBaseUrl" placeholder="https://api.openai.com/v1" value="https://api.openai.com/v1">
+                </div>
+                <div class="input-group">
+                    <label>API密钥:</label>
+                    <input type="password" id="apiKey" placeholder="sk-...">
+                </div>
+                <div class="modal-buttons">
+                    <button class="save-config-btn" onclick="saveApiConfig()">保存配置</button>
+                    <button class="demo-btn" onclick="useDemoMode()">使用演示模式</button>
+                </div>
+            </div>
         </div>
+
+        <main>
+            <!-- 上传区域 -->
+            <section class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📸</div>
+                    <h3>上传塔罗牌照片</h3>
+                    <p>支持 JPG、PNG 格式，最大 10MB</p>
+                    <input type="file" id="tarotImage" accept="image/*" hidden>
+                    <button class="upload-btn" onclick="document.getElementById('tarotImage').click()">
+                        选择图片
+                    </button>
+                </div>
+                <div class="preview-area" id="previewArea" style="display: none;">
+                    <img id="previewImage" alt="上传的塔罗牌">
+                    <button class="remove-btn" onclick="removeImage()">×</button>
+                </div>
+            </section>
+
+            <!-- 问题输入 -->
+            <section class="question-section">
+                <h3>您的问题或关注点</h3>
+                <textarea id="userQuestion" placeholder="请描述您想要咨询的问题，比如：我的事业发展如何？或者我们的感情发展..."></textarea>
+            </section>
+
+            <!-- 牌阵选择 -->
+            <section class="spread-section">
+                <h3>选择牌阵</h3>
+                <div class="spread-options">
+                    <label class="spread-option">
+                        <input type="radio" name="spread" value="single" checked>
+                        <span>单张牌</span>
+                    </label>
+                    <label class="spread-option">
+                        <input type="radio" name="spread" value="three">
+                        <span>三张牌（过去-现在-未来）</span>
+                    </label>
+                    <label class="spread-option">
+                        <input type="radio" name="spread" value="celtic">
+                        <span>凯尔特十字</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- 开始解读按钮 -->
+            <section class="action-section">
+                <button class="read-btn" id="readButton" disabled>
+                    <span class="btn-text">开始解读</span>
+                    <span class="loading" style="display: none;">解读中...</span>
+                </button>
+            </section>
+
+            <!-- 结果展示 -->
+            <section class="result-section" id="resultSection" style="display: none;">
+                <h3>🔮 AI解读结果</h3>
+                <div class="result-content" id="resultContent">
+                    <!-- 解读结果将在这里显示 -->
+                </div>
+                <button class="save-btn" onclick="saveReading()">保存解读</button>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025 神秘塔罗牌解读 | 仅供娱乐参考</p>
+        </footer>
     </div>
 
-    <script>
-        // 获取DOM元素
-        const display = document.getElementById('display');
-        const startBtn = document.getElementById('startBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        
-        // 计时器变量
-        let startTime;
-        let elapsedTime = 0;
-        let timerInterval;
-        let isRunning = false;
-        
-        // 格式化时间显示
-        function formatTime(timeInSeconds) {
-            const hours = Math.floor(timeInSeconds / 3600);
-            const minutes = Math.floor((timeInSeconds % 3600) / 60);
-            const seconds = timeInSeconds % 60;
-            
-            return [
-                hours.toString().padStart(2, '0'),
-                minutes.toString().padStart(2, '0'),
-                seconds.toString().padStart(2, '0')
-            ].join(':');
-        }
-        
-        // 更新显示
-        function updateDisplay() {
-            const currentTime = Math.floor((Date.now() - startTime) / 1000) + elapsedTime;
-            display.textContent = formatTime(currentTime);
-        }
-        
-        // 开始计时
-        function startTimer() {
-            if (!isRunning) {
-                startTime = Date.now();
-                timerInterval = setInterval(updateDisplay, 1000);
-                isRunning = true;
-                
-                // 更新按钮状态
-                startBtn.disabled = true;
-                pauseBtn.disabled = false;
-            }
-        }
-        
-        // 暂停计时
-        function pauseTimer() {
-            if (isRunning) {
-                clearInterval(timerInterval);
-                elapsedTime += Math.floor((Date.now() - startTime) / 1000);
-                isRunning = false;
-                
-                // 更新按钮状态
-                startBtn.disabled = false;
-                pauseBtn.disabled = true;
-            }
-        }
-        
-        // 重置计时器
-        function resetTimer() {
-            clearInterval(timerInterval);
-            display.textContent = '00:00:00';
-            elapsedTime = 0;
-            isRunning = false;
-            
-            // 更新按钮状态
-            startBtn.disabled = false;
-            pauseBtn.disabled = true;
-        }
-        
-        // 添加事件监听器
-        startBtn.addEventListener('click', startTimer);
-        pauseBtn.addEventListener('click', pauseTimer);
-        resetBtn.addEventListener('click', resetTimer);
-    </script>
+    <script src="config.js"></script>
+    <script src="api/openai-client.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
