@@ -107,21 +107,20 @@ const userMessages = {
 问题：${question}
 牌阵类型：${getSpreadTypeText(spreadType, 'zh')}
 
-请以“**你的塔罗启示**”为标题，用一篇精炼、深刻、充满智慧的短文呈现解读，无需分点。
+用一篇精炼、深刻、充满智慧的短文呈现塔罗解读，无需分点。
 内容应自然融合以下三个层面：
-1. **牌面之镜**：揭示牌面及其象征。
-2. **意象解读**：深入剖析处境与未来。
-3. **星辰指引**：给予一句画龙点睛的神谕。`,
+1. **牌面之镜**：不仅揭示单张牌的象征，更要点出牌与牌之间形成的【故事线或核心矛盾】。
+2. **意象解读**：深入剖析此牌阵如何映照你的【处境与内心状态】，并揭示未来的【潜在走向与挑战】。
+3. **星辰指引**：给予一句画龙点睛的神谕，并附上一条【可落地的行动建议】。`,
     en: (question, spreadType) => `Please interpret the following tarot cards.
 
 Question: ${question}
 Spread Type: ${getSpreadTypeText(spreadType, 'en')}
 
-Please present the interpretation as a concise, profound, and wise short essay, titled "**Your Tarot Revelation**", without bullet points.
-The content should naturally integrate the following three aspects:
-1. **Mirror of the Cards**: Revealing the cards and their symbolism.
-2. **Interpretation of Imagery**: Deeply analyzing the core situation and future direction.
-3. **Guidance from the Stars**: Providing a powerful, insightful oracle.`
+Please present the interpretation as a concise, profound, and wise short essay, without bullet points. The content should naturally integrate the following three aspects:
+1. **Mirror of the Cards**: Reveal not just the symbolism of individual cards, but also the **narrative or core conflict** that emerges from their interplay.
+2. **Interpretation of Imagery**: Deeply analyze how this spread mirrors the user's **situation and inner state**, revealing potential **future paths and challenges**.
+3. **Guidance from the Stars**: Provide a powerful, insightful oracle, accompanied by one piece of **actionable advice**.`
 };
 
 function getSystemPrompt(spreadType, lang) {
