@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
 请将所有内容整合为一个连贯、完整的解读，使用🔮 AI解读结果作为标题。`;
 
     try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        const response = await fetch('https://api.tu-zi.com/v1/chat/completions', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
