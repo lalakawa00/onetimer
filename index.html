@@ -16,32 +16,7 @@
             <p class="subtitle">上传您抽到的塔罗牌照片，AI将为您揭示命运的奥秘</p>
         </header>
 
-        <!-- API配置模态框 -->
-        <div class="api-modal" id="apiModal">
-            <div class="modal-content">
-                <h3>🔑 AI API 配置</h3>
-                <p>请选择您偏好的AI服务商并输入对应的API密钥，我们将安全地保存在您的浏览器中。</p>
-                <div class="input-group">
-                    <label for="apiType">AI 服务商:</label>
-                    <select id="apiType">
-                        <option value="openai">OpenAI (推荐)</option>
-                        <option value="gemini">Google Gemini (备用)</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="apiKey">API 密钥:</label>
-                    <input type="password" id="apiKey" placeholder="请输入您的API密钥">
-                </div>
-                <div class="modal-buttons">
-                    <button class="save-config-btn" id="saveApiConfigBtn">保存配置</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 设置按钮 -->
-        <div class="settings-fab" id="settingsBtn" title="修改API配置">
-            ⚙️
-        </div>
+        
 
         <main>
             <!-- 上传区域 -->
@@ -109,7 +84,8 @@
         </footer>
     </div>
 
-    <script src="js/openai-client.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <script src="js/tarot-ai-client.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

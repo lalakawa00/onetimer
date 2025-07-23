@@ -9,83 +9,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function initializeApp() {
-    // 初始化Gemini客户端
+    // 初始化客户端
     tarotAI = new TarotAIClient();
 
     // 绑定DOM元素事件
     document.getElementById('tarotImage').addEventListener('change', handleImageUpload);
     document.getElementById('readButton').addEventListener('click', startReading);
-    document.getElementById('settingsBtn').addEventListener('click', openSettingsModal);
-    document.getElementById('saveApiConfigBtn').addEventListener('click', saveApiConfig);
     document.getElementById('userQuestion').addEventListener('input', updateReadButtonState);
     document.querySelector('.remove-btn').addEventListener('click', removeImage);
 
-    // 检查API配置
-    checkAPIConfiguration();
-    
     // 拖拽上传
     setupDragAndDrop();
-}
-
-// 打开设置模态框并填充已有数据
-function openSettingsModal() {
-    // 尝试获取最新的API密钥
-    const openaiKey = localStorage.getItem('openai_api_key') || '';
-    const geminiKey = localStorage.getItem('gemini_api_key') || '';
-    
-    // 显示当前配置的API类型
-    const apiType = document.getElementById('apiKey').placeholder;
-    
-    if (openaiKey || !geminiKey) {
-        // 优先考虑OpenAI
-        document.getElementById('apiKey').value = openaiKey;
-        document.getElementById('apiType').value = 'openai';
-    } else {
-        // 使用Gemini作为后备
-        document.getElementById('apiKey').value = geminiKey;
-        document.getElementById('apiType').value = 'gemini';
-    }
-    
-    document.getElementById('apiModal').style.display = 'flex';
-}
-
-// 检查API配置
-function checkAPIConfiguration() {
-    const openaiKey = localStorage.getItem('openai_api_key');
-    const geminiKey = localStorage.getItem('gemini_api_key');
-    
-    if (openaiKey) {
-        // 使用新的OpenAI客户端
-        tarotAI.saveApiKey(openaiKey);
-        document.getElementById('apiModal').style.display = 'none';
-    } else if (geminiKey) {
-        // 使用旧的Gemini配置
-        tarotAI.saveApiKey(geminiKey);
-        document.getElementById('apiModal').style.display = 'none';
-    } else {
-        openSettingsModal(); // 如果没有key，直接打开设置窗口
-    }
-}
-
-// 保存API配置
-function saveApiConfig() {
-    const apiKey = document.getElementById('apiKey').value.trim();
-    const apiType = document.getElementById('apiType')?.value || 'openai';
-    
-    if (apiKey) {
-        if (apiType === 'openai') {
-            localStorage.setItem('openai_api_key', apiKey);
-            tarotAI.saveApiKey(apiKey);
-        } else {
-            localStorage.setItem('gemini_api_key', apiKey);
-            alert('现在支持OpenAI API，建议您迁移到OpenAI以获得更好的体验！');
-        }
-        
-        document.getElementById('apiModal').style.display = 'none';
-        alert('API密钥已保存！');
-    } else {
-        alert('请输入您的API密钥。');
-    }
 }
 
 // 处理图片上传
@@ -165,12 +99,6 @@ function updateReadButtonState() {
 async function startReading() {
     if (isProcessing) return;
 
-    if (!tarotAI.isConfigured()) {
-        alert('请先点击右下角设置按钮 ⚙️ 配置您的Gemini API密钥。');
-        openSettingsModal();
-        return;
-    }
-    
     isProcessing = true;
     updateUIForProcessing(true);
     
@@ -231,16 +159,12 @@ function showLoadingState() {
 // 显示结果
 function displayResult(reading) {
     const resultContent = document.getElementById('resultContent');
-    
-    // 使用 pre-wrap 来保留换行和空格
-    const formatText = (text) => {
-        return text.replace(/\n/g, '<br>');
-    }
-
+    const converter = new showdown.Converter();
+    const html = converter.makeHtml(reading.unifiedReading || reading);
     resultContent.innerHTML = `
         <div class="reading-result">
             <div class="unified-reading">
-                <div class="reading-text">${formatText(reading.unifiedReading || reading)}</div>
+                <div class="reading-text">${html}</div>
             </div>
         </div>
     `;
