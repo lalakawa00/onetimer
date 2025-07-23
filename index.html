@@ -1,86 +1,125 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
-    <title>神秘塔罗牌解读 - AI智能分析</title>
+    
+    <!-- SEO Meta Tags -->
+    <title data-key="title">AI塔罗牌解读 | 免费在线塔罗占卜</title>
+    <meta name="description" data-key="description" content="探索命运的奥秘！上传您的塔罗牌照片，体验由AI驱动的专业、深刻的在线塔罗解读。我们提供单张牌、三张牌、凯尔特十字等多种牌阵，为您提供关于事业、爱情和未来的精准指引。">
+    <meta name="keywords" data-key="keywords" content="AI塔罗, 塔罗牌解读, 在线塔罗, 免费塔罗, 塔罗占卜, 塔罗牌阵, 事业运, 感情运, 未来运势, AI Tarot, Online Tarot Reading, Free Tarot">
+    <meta name="author" content="AI Tarot">
+
+    <!-- Social Media Meta Tags (Open Graph & Twitter Cards) -->
+    <meta property="og:title" data-key="og:title" content="AI塔罗牌解读 | 免费在线塔罗占卜">
+    <meta property="og:description" data-key="og:description" content="上传塔罗牌照片，即刻获得由AI提供的专业、深刻的在线解读。探索您的事业、爱情与未来。">
+    <meta property="og:image" content="https://your-website.com/og-image.jpg"> <!-- 请替换为您的网站主图 -->
+    <meta property="og:url" content="https://your-website.com"> <!-- 请替换为您的网站URL -->
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" data-key="twitter:title" content="AI塔罗牌解读 | 免费在线塔罗占卜">
+    <meta name="twitter:description" data-key="twitter:description" content="即时、智能的AI塔罗牌解读。拍下您的牌面，揭示未来的秘密。">
+    <meta name="twitter:image" content="https://your-website.com/twitter-image.jpg"> <!-- 请替换为您的网站主图 -->
+
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family+Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AI Tarot Reading",
+      "description": "An application that provides online tarot card readings using artificial intelligence.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
 </head>
 <body>
     <div class="stars"></div>
     <div class="container">
         <header>
-            <h1>🔮 神秘塔罗牌解读 🔮</h1>
-            <p class="subtitle">上传您抽到的塔罗牌照片，AI将为您揭示命运的奥秘</p>
+            <h1 data-key="main-title">🔮 AI塔罗牌解读 🔮</h1>
+            <p class="subtitle" data-key="subtitle">上传您抽到的塔罗牌照片，AI将为您揭示命运的奥秘</p>
         </header>
-
-        
 
         <main>
             <!-- 上传区域 -->
             <section class="upload-section">
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">📸</div>
-                    <h3>上传塔罗牌照片</h3>
-                    <p>支持 JPG、PNG 格式，最大 10MB</p>
+                    <h3 data-key="upload-title">上传塔罗牌照片</h3>
+                    <p data-key="upload-desc">支持 JPG、PNG 格式，最大 10MB</p>
                     <input type="file" id="tarotImage" accept="image/*" hidden>
-                    <button class="upload-btn" onclick="document.getElementById('tarotImage').click()">
+                    <button class="upload-btn" onclick="document.getElementById('tarotImage').click()" data-key="upload-btn">
                         选择图片
                     </button>
                 </div>
                 <div class="preview-area" id="previewArea" style="display: none;">
-                    <img id="previewImage" alt="上传的塔罗牌">
+                    <img id="previewImage" alt="用户上传的塔罗牌照片预览">
                     <button class="remove-btn" onclick="removeImage()">×</button>
                 </div>
             </section>
 
             <!-- 问题输入 -->
             <section class="question-section">
-                <h3>您的问题或关注点</h3>
-                <textarea id="userQuestion" placeholder="请描述您想要咨询的问题，比如：我的事业发展如何？或者我们的感情发展..."></textarea>
+                <h2 data-key="question-title">您的问题或关注点</h2>
+                <textarea id="userQuestion" data-key="question-placeholder" placeholder="请描述您想要咨询的问题，比如：我的事业发展如何？或者我们的感情发展..."></textarea>
             </section>
 
             <!-- 牌阵选择 -->
             <section class="spread-section">
-                <h3>选择牌阵</h3>
+                <h2 data-key="spread-title">选择牌阵</h2>
                 <div class="spread-options">
                     <label class="spread-option">
                         <input type="radio" name="spread" value="single" checked>
-                        <span>单张牌</span>
+                        <span data-key="spread-single">单张牌</span>
                     </label>
                     <label class="spread-option">
                         <input type="radio" name="spread" value="three">
-                        <span>三张牌（过去-现在-未来）</span>
+                        <span data-key="spread-three">三张牌（过去-现在-未来）</span>
                     </label>
                     <label class="spread-option">
                         <input type="radio" name="spread" value="celtic">
-                        <span>凯尔特十字</span>
+                        <span data-key="spread-celtic">凯尔特十字</span>
                     </label>
                 </div>
+            </section>
+
+            <!-- SEO Content Section -->
+            <section class="content-section">
+                <h2 data-key="seo-title">探索AI塔罗的神秘世界</h2>
+                <p data-key="seo-p1">欢迎来到AI塔罗牌解读，一个结合了古老智慧与前沿科技的神秘空间。在这里，您无需寻找塔罗师，只需一张简单的塔罗牌照片，我们强大的人工智能就能为您提供媲美专家的深度解读。无论您是塔罗新手还是资深爱好者，都能在这里获得清晰的指引。</p>
+                <p data-key="seo-p2">我们的服务完全免费。只需选择您的牌阵，输入您关心的问题——无论是关于爱情的困惑、事业的抉择，还是对未来的探索——然后上传您的牌面照片。AI将立即为您生成一份专属的塔罗启示，帮助您洞察现状，找到前行的方向。</p>
             </section>
 
             <!-- 开始解读按钮 -->
             <section class="action-section">
                 <button class="read-btn" id="readButton" disabled>
-                    <span class="btn-text">开始解读</span>
-                    <span class="loading" style="display: none;">解读中...</span>
+                    <span class="btn-text" data-key="read-btn">开始解读</span>
+                    <span class="loading" style="display: none;" data-key="loading-text">解读中...</span>
                 </button>
             </section>
 
             <!-- 结果展示 -->
             <section class="result-section" id="resultSection" style="display: none;">
-                <h3>🔮 AI解读结果</h3>
+                <h2 data-key="result-title">您的塔罗启示</h2>
                 <div class="result-content" id="resultContent">
                     <!-- 解读结果将在这里显示 -->
                 </div>
-                <button class="save-btn" onclick="saveReading()">保存解读</button>
+                <button class="save-btn" onclick="saveReading()" data-key="save-btn">保存解读</button>
             </section>
         </main>
 
         <footer>
-            <p>© 2025 神秘塔罗牌解读 | 仅供娱乐参考</p>
+            <p data-key="footer-text">© 2025 AI塔罗牌解读 | 本服务结果仅供娱乐和参考，不构成专业建议。</p>
         </footer>
     </div>
 

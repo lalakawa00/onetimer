@@ -6,14 +6,14 @@ class TarotAIClient {
         return true;
     }
 
-    async readTarot(imageData, question, spreadType) {
+    async readTarot(imageData, question, spreadType, lang) {
         try {
             const response = await fetch('/api/tarot', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ imageData, question, spreadType })
+                body: JSON.stringify({ imageData, question, spreadType, lang })
             });
 
             if (!response.ok) {

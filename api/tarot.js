@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    const { imageData, question, spreadType } = req.body;
+    const { imageData, question, spreadType, lang } = req.body;
     const apiKey = process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
@@ -17,18 +17,8 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: 'Missing required parameters.' });
     }
 
-    const systemPrompt = getSystemPrompt(spreadType);
-    const userMessage = `请为以下塔罗牌进行解读。
-
-问题：${question}
-牌阵类型：${getSpreadTypeText(spreadType)}
-
-请提供完整的塔罗牌解读，包括：
-1. 识别出的塔罗牌及其位置含义
-2. 针对问题的详细解读分析
-3. 具体的建议与指引
-
-请将所有内容整合为一个连贯、完整的解读，使用🔮 AI解读结果作为标题。`;
+    const systemPrompt = getSystemPrompt(spreadType, lang);
+    const userMessage = getUserMessage(question, spreadType, lang);
 
     try {
         const response = await fetch('https://api.tu-zi.com/v1/chat/completions', {
@@ -60,7 +50,7 @@ module.exports = async (req, res) => {
                         ]
                     }
                 ],
-                max_tokens: 2000,
+                max_tokens: 1000,
                 temperature: 0.7
             })
         });
@@ -80,29 +70,81 @@ module.exports = async (req, res) => {
     }
 };
 
-function getSystemPrompt(spreadType) {
-    return `你是一位经验丰富的塔罗牌解读师。请根据用户上传的塔罗牌图片和他们的具体问题，提供专业、深入且富有洞察力的解读。
+const systemPrompts = {
+    zh: `你是一位神秘的塔罗牌占卜师。你的语言精炼、深刻，充满诗意与智慧，如同神谕。
 
-你的解读应该：
-- 准确识别图片中的塔罗牌
-- 结合牌阵类型分析问题
-- 提供具体、实用的建议
-- 语言要温暖、鼓励，但保持专业
-- 避免过于笼统的表述
+你的解读要做到：
+- **言简意赅**: 避免冗长解释，直击核心。
+- **意境深远**: 使用象征和隐喻，引发深思。
+- **洞察本质**: 穿透牌面，揭示问题的根源与未来的可能性。
+- **保持神秘**: 语言风格要统一，温暖而又充满敬畏感。
 
-牌阵类型说明：
-- 单张牌：针对具体问题的直接回答
-- 三张牌：过去-现在-未来的时间线分析
-- 凯尔特十字：全面的情况分析和建议
+牌阵类型说明（仅作你解读时的内在参考，无需在回答中提及）：
+- 单张牌：针对具体问题的直接回答。
+- 三张牌：过去-现在-未来的时间线分析。
+- 凯尔特十字：全面的情况分析和建议。
 
-请将所有内容整合为一个完整的解读，不要分开展示不同的部分。`;
+请将所有内容无缝融合为一篇充满智慧的短文，不要分段或使用列表。`,
+    en: `You are a mystical tarot card diviner. Your language is concise, profound, poetic, and full of wisdom, like an oracle.
+
+Your interpretation should be:
+- **Concise**: Avoid lengthy explanations, go straight to the core.
+- **Profound**: Use symbols and metaphors to inspire deep thought.
+- **Insightful**: Penetrate the cards to reveal the root of the problem and future possibilities.
+- **Mysterious**: Maintain a consistent language style, warm yet reverent.
+
+Spread type descriptions (for your internal reference only, do not mention in the answer):
+- Single Card: Direct answer to a specific question.
+- Three Cards: Past-Present-Future timeline analysis.
+- Celtic Cross: Comprehensive situation analysis and advice.
+
+Please seamlessly integrate all content into a wise and concise short essay, without paragraphs or lists.`
+};
+
+const userMessages = {
+    zh: (question, spreadType) => `请为以下塔罗牌进行解读。
+
+问题：${question}
+牌阵类型：${getSpreadTypeText(spreadType, 'zh')}
+
+请以“**你的塔罗启示**”为标题，用一篇精炼、深刻、充满智慧的短文呈现解读，无需分点。
+内容应自然融合以下三个层面：
+1. **牌面之镜**：揭示牌面及其象征。
+2. **意象解读**：深入剖析处境与未来。
+3. **星辰指引**：给予一句画龙点睛的神谕。`,
+    en: (question, spreadType) => `Please interpret the following tarot cards.
+
+Question: ${question}
+Spread Type: ${getSpreadTypeText(spreadType, 'en')}
+
+Please present the interpretation as a concise, profound, and wise short essay, titled "**Your Tarot Revelation**", without bullet points.
+The content should naturally integrate the following three aspects:
+1. **Mirror of the Cards**: Revealing the cards and their symbolism.
+2. **Interpretation of Imagery**: Deeply analyzing the core situation and future direction.
+3. **Guidance from the Stars**: Providing a powerful, insightful oracle.`
+};
+
+function getSystemPrompt(spreadType, lang) {
+    return systemPrompts[lang] || systemPrompts['zh'];
 }
 
-function getSpreadTypeText(spreadType) {
-    const spreadMap = {
+function getUserMessage(question, spreadType, lang) {
+    return userMessages[lang](question, spreadType) || userMessages['zh'](question, spreadType);
+}
+
+const spreadTypeTexts = {
+    zh: {
         'single': '单张牌',
         'three': '三张牌（过去-现在-未来）',
         'celtic': '凯尔特十字'
-    };
-    return spreadMap[spreadType] || '未知牌阵';
+    },
+    en: {
+        'single': 'Single Card',
+        'three': 'Three Cards (Past-Present-Future)',
+        'celtic': 'Celtic Cross'
+    }
+};
+
+function getSpreadTypeText(spreadType, lang) {
+    return (spreadTypeTexts[lang] && spreadTypeTexts[lang][spreadType]) || spreadTypeTexts['zh'][spreadType] || '未知牌阵';
 }
